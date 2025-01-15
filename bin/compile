@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+# Ruby version to install
+RUBY_VERSION="2.7.1"
+
+echo "-----> Installing Ruby $RUBY_VERSION"
+
+# Install dependencies
+apt-get update -y
+apt-get install -y libssl-dev libreadline-dev zlib1g-dev
+
+# Download and install Ruby
+wget https://cache.ruby-lang.org/pub/ruby/2.7/ruby-$RUBY_VERSION.tar.gz
+tar -xzvf ruby-$RUBY_VERSION.tar.gz
+cd ruby-$RUBY_VERSION
+./configure --prefix=/usr/local
+make
+make install
+
+echo "-----> Ruby $RUBY_VERSION installed"
