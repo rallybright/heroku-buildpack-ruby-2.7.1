@@ -1,7 +1,24 @@
 #!/bin/sh
-if grep -q "ruby '2.7.1'" Gemfile; then
-  echo "ruby-2.7.1 detected"
+
+# Custom check for Gemfile in a subdirectory (example: 'app/')
+if [ -f "app/Gemfile" ]; then
+  echo "rails app detected"
   exit 0
+fi
+
+# Check if Gemfile exists at the root
+if [ -f "Gemfile" ]; then
+  if grep -q "rails" Gemfile; then
+    echo "rails app detected"
+    exit 0
+  elif grep -q "rack" Gemfile; then
+    echo "rack app detected"
+    exit 0
+  else
+    echo "ruby app detected"
+    exit 0
+  fi
 else
+  echo "No Gemfile found, not a Ruby, Rack, or Rails app"
   exit 1
 fi
