@@ -1,0 +1,9 @@
+#!/bin/bash
+echo "--- Release phase"
+cat <<EOF
+---
+RUBY_VERSION: 2.7.1
+GEM_HOME: /usr/local/ruby-2.7.1/gems
+GEM_PATH: /usr/local/ruby-2.7.1/gems
+PATH: /usr/local/ruby-2.7.1/bin:$PATH
+EOF

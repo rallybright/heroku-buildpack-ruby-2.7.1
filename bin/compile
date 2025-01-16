@@ -1,21 +1,25 @@
 #!/bin/bash
-set -e
-
-# Ruby version to install
+BUILD_DIR=$1
+CACHE_DIR=$2
 RUBY_VERSION="2.7.1"
-
-echo "-----> Installing Ruby $RUBY_VERSION"
-
-# Install dependencies
-apt-get update -y
-apt-get install -y libssl-dev libreadline-dev zlib1g-dev
-
-# Download and install Ruby
-wget https://cache.ruby-lang.org/pub/ruby/2.7/ruby-$RUBY_VERSION.tar.gz
-tar -xzvf ruby-$RUBY_VERSION.tar.gz
-cd ruby-$RUBY_VERSION
-./configure --prefix=/usr/local
-make
-make install
-
-echo "-----> Ruby $RUBY_VERSION installed"
+apt-get update
+apt-get install -y libssl-dev libreadline-dev zlib1g-dev libyaml-dev libffi-dev libgdbm-dev libncurses5-dev libgmp-dev libgmpxx4ldbl libsqlite3-dev libxml2-dev libxslt-dev autoconf bison libgmp-dev
+RUBY_BIN="/usr/local/ruby-$RUBY_VERSION/bin"
+if [ ! -d "$RUBY_BIN" ]; then
+  echo "Installing Ruby $RUBY_VERSION"
+  mkdir -p /tmp/ruby-build
+  cd /tmp/ruby-build
+  curl -L https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.1.tar.gz | tar -xz
+  cd ruby-2.7.1
+  ./configure --prefix=/usr/local/ruby-$RUBY_VERSION
+  make
+  make install
+fi
+export PATH="/usr/local/ruby-$RUBY_VERSION/bin:$PATH"
+export GEM_HOME="/usr/local/ruby-$RUBY_VERSION/gems"
+export GEM_PATH="/usr/local/ruby-$RUBY_VERSION/gems"
+export RUBY_VERSION=$RUBY_VERSION
+gem install bundler --no-document
+cd $BUILD_DIR
+bundle install --path=$GEM_HOME --deployment
+echo "Ruby 2.7.1 installation completed"
